@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+//using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,13 @@ namespace Shop.DAL
         {
             try
             {
-                using (var connection = new SQLiteConnection(@"Data Source=Shop.sqlite;Version=3;"))
+                using (var connection = new SQLiteConnection("Data Source=Shop.sqlite"))
                 {
                     connection.Open();
-
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+                    command.CommandText = "SELECT id, login, passwrd, sotrudniki.name_sotr, root FROM Users, Sotrudniki WHERE sotrudniki.id = users.id_sotr";
+                    ExecuteReader();
                     using (var cmd = new SQLiteCommand("SELECT id, login, passwrd, sotrudniki.name_sotr, root FROM Users, Sotrudniki WHERE sotrudniki.id = users.id_sotr", connection))
                     {
                         using (var rdr = cmd.ExecuteReader())
